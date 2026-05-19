@@ -1550,8 +1550,7 @@ if (isset($_SESSION['message'])) {
                             <!-- First Name -->
                             <div>
                                 <label for="firstName" class="block text-sm font-medium text-gray-700 mb-2">
-                                    First Name <span class="text-red-500">*</span>
-                                </label>
+                                    First Name                                </label>
                                 <div class="relative">
                                     <input type="text" id="firstName" name="firstName" required 
                                         class="w-full px-4 py-3 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
@@ -1568,8 +1567,7 @@ if (isset($_SESSION['message'])) {
                             <!-- Last Name -->
                             <div>
                                 <label for="lastName" class="block text-sm font-medium text-gray-700 mb-2">
-                                    Last Name <span class="text-red-500">*</span>
-                                </label>
+                                    Last Name                                </label>
                                 <div class="relative">
                                     <input type="text" id="lastName" name="lastName" required 
                                         class="w-full px-4 py-3 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
@@ -1586,8 +1584,7 @@ if (isset($_SESSION['message'])) {
                             <!-- Date of Birth -->
                             <div>
                                 <label for="dateOfBirth" class="block text-sm font-medium text-gray-700 mb-2">
-                                    Date of Birth <span class="text-red-500">*</span>
-                                </label>
+                                    Date of Birth                                </label>
                                 <div class="relative">
                                     <input type="date" id="dateOfBirth" name="dateOfBirth" required
                                         class="w-full px-4 py-3 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
@@ -1604,8 +1601,7 @@ if (isset($_SESSION['message'])) {
                             <!-- Gender -->
                             <div>
                                 <label for="gender" class="block text-sm font-medium text-gray-700 mb-2">
-                                    Gender <span class="text-red-500">*</span>
-                                </label>
+                                    Gender                                </label>
                                 <select id="gender" name="gender" required 
                                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 appearance-none">
                                     <option value="">Select gender</option>
@@ -1635,8 +1631,7 @@ if (isset($_SESSION['message'])) {
                             <!-- Email Address -->
                             <div>
                                 <label for="registerEmail" class="block text-sm font-medium text-gray-700 mb-2">
-                                    Email Address <span class="text-red-500">*</span>
-                                </label>
+                                    Email Address                                </label>
                                 <div class="relative">
                                     <input type="email" id="registerEmail" name="registerEmail" required 
                                         class="w-full px-4 py-3 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
@@ -1656,8 +1651,7 @@ if (isset($_SESSION['message'])) {
                             <!-- Phone Number -->
                             <div>
                                 <label for="phoneNumber" class="block text-sm font-medium text-gray-700 mb-2">
-                                    Phone Number <span class="text-red-500">*</span>
-                                </label>
+                                    Phone Number                                </label>
                                 <div class="relative">
                                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                         <span class="text-gray-500">+63</span>
@@ -1727,8 +1721,7 @@ if (isset($_SESSION['message'])) {
                                 <!-- Password -->
                                 <div>
                                     <label for="registerPassword" class="block text-sm font-medium text-gray-700 mb-2">
-                                        Password <span class="text-red-500">*</span>
-                                    </label>
+                                        Password                                    </label>
                                     <div class="relative">
                                         <input type="password" id="registerPassword" name="registerPassword" required 
                                             class="w-full px-4 py-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 password-strength-input"
@@ -1754,8 +1747,7 @@ if (isset($_SESSION['message'])) {
                                 <!-- Confirm Password -->
                                 <div>
                                     <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-2">
-                                        Confirm Password <span class="text-red-500">*</span>
-                                    </label>
+                                        Confirm Password                                    </label>
                                     <div class="relative">
                                         <input type="password" id="confirmPassword" name="confirmPassword" required 
                                             class="w-full px-4 py-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 password-match-input"

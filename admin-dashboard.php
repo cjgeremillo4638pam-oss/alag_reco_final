@@ -1286,15 +1286,15 @@ $calendar_appointments = get_all_appointments_for_calendar($conn);
                     <input type="hidden" id="editUserId" name="user_id">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">First Name <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
                             <input type="text" id="editUserFirstName" required maxlength="50" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Last Name <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
                             <input type="text" id="editUserLastName" required maxlength="50" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Email <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
                             <input type="email" id="editUserEmail" required maxlength="100" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
                         <div>
@@ -1329,7 +1329,7 @@ $calendar_appointments = get_all_appointments_for_calendar($conn);
                             <input type="tel" id="editUserEmergencyPhone" maxlength="20" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Role <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Role</label>
                             <select id="editUserRole" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                                 <option value="PARENT">Parent</option>
                                 <option value="ADMIN">Admin</option>
@@ -1338,7 +1338,7 @@ $calendar_appointments = get_all_appointments_for_calendar($conn);
                             <p class="mt-1 text-xs text-gray-500" id="editUserRoleHint">Doctor roles cannot be changed here.</p>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Status <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
                             <select id="editUserStatus" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                                 <option value="active">Active</option>
                                 <option value="inactive">Inactive</option>
@@ -1368,31 +1368,31 @@ $calendar_appointments = get_all_appointments_for_calendar($conn);
                 <form id="addUserForm" onsubmit="handleAddUser(event)" class="space-y-6">
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">First Name <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
                             <input type="text" id="newUserFirstName" required
                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Last Name <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
                             <input type="text" id="newUserLastName" required
                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Email Address <span class="text-red-500">*</span></label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
                         <input type="email" id="newUserEmail" required
                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number <span class="text-red-500">*</span></label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
                         <input type="tel" id="newUserPhone" required
                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">User Role <span class="text-red-500">*</span></label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">User Role</label>
                         <select id="newUserRole" required
                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                             <option value="">Select role</option>
@@ -1404,7 +1404,7 @@ $calendar_appointments = get_all_appointments_for_calendar($conn);
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Initial Password <span class="text-red-500">*</span></label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Initial Password</label>
                         <input type="password" id="newUserPassword" required
                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                     </div>
@@ -1434,7 +1434,7 @@ $calendar_appointments = get_all_appointments_for_calendar($conn);
                 
                 <form id="addScheduleForm" onsubmit="handleAddSchedule(event)" class="space-y-6">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Doctor <span class="text-red-500">*</span></label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Doctor</label>
                         <select id="scheduleDoctor" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                             <option value="">Select doctor</option>
                             <?php
@@ -1447,7 +1447,7 @@ $calendar_appointments = get_all_appointments_for_calendar($conn);
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Day of Week <span class="text-red-500">*</span></label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Day of Week</label>
                         <select id="scheduleDay" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                             <option value="">Select day</option>
                             <option value="MONDAY">Monday</option>
@@ -1462,12 +1462,12 @@ $calendar_appointments = get_all_appointments_for_calendar($conn);
                     
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Start Time <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Start Time</label>
                             <input type="time" id="scheduleStartTime" required
                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">End Time <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">End Time</label>
                             <input type="time" id="scheduleEndTime" required
                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
@@ -1475,12 +1475,12 @@ $calendar_appointments = get_all_appointments_for_calendar($conn);
                     
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Slot Duration (mins) <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Slot Duration (mins)</label>
                             <input type="number" id="scheduleDuration" value="30" required
                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Max Patients <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Max Patients</label>
                             <input type="number" id="scheduleMaxPatients" value="10" required
                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
@@ -1511,13 +1511,13 @@ $calendar_appointments = get_all_appointments_for_calendar($conn);
                 
                 <form id="addServiceForm" onsubmit="handleAddService(event)" class="space-y-6" novalidate>
                     <div>
-                        <label for="serviceName" class="block text-sm font-medium text-gray-700 mb-2">Service Name <span class="text-red-500">*</span></label>
+                        <label for="serviceName" class="block text-sm font-medium text-gray-700 mb-2">Service Name</label>
                         <input type="text" id="serviceName" name="name" required minlength="2" maxlength="100"
                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                     </div>
 
                     <div>
-                        <label for="serviceDescription" class="block text-sm font-medium text-gray-700 mb-2">Description <span class="text-red-500">*</span></label>
+                        <label for="serviceDescription" class="block text-sm font-medium text-gray-700 mb-2">Description</label>
                         <textarea id="serviceDescription" name="description" rows="3" required minlength="10" maxlength="500"
                                   placeholder="Describe the service (at least 10 characters)"
                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"></textarea>
@@ -1525,12 +1525,12 @@ $calendar_appointments = get_all_appointments_for_calendar($conn);
 
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label for="serviceDuration" class="block text-sm font-medium text-gray-700 mb-2">Duration (mins) <span class="text-red-500">*</span></label>
+                            <label for="serviceDuration" class="block text-sm font-medium text-gray-700 mb-2">Duration (mins)</label>
                             <input type="number" id="serviceDuration" name="duration" value="30" required min="1" max="480" step="1" inputmode="numeric"
                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
                         <div>
-                            <label for="serviceCost" class="block text-sm font-medium text-gray-700 mb-2">Cost (&#8369;) <span class="text-red-500">*</span></label>
+                            <label for="serviceCost" class="block text-sm font-medium text-gray-700 mb-2">Cost (&#8369;)</label>
                             <input type="number" id="serviceCost" name="cost" step="0.01" min="0" required inputmode="decimal"
                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
@@ -1566,7 +1566,7 @@ $calendar_appointments = get_all_appointments_for_calendar($conn);
                 </div>
                 <form id="addPatientForm" onsubmit="handleAddPatient(event)" class="space-y-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Parent / Guardian <span class="text-red-500">*</span></label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Parent / Guardian</label>
                         <select id="patientParentId" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                             <option value="">-- Select parent --</option>
                             <?php foreach ($parent_users as $pu): ?>
@@ -1578,19 +1578,19 @@ $calendar_appointments = get_all_appointments_for_calendar($conn);
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">First Name <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
                             <input type="text" id="patientFirstName" required maxlength="50" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Last Name <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
                             <input type="text" id="patientLastName" required maxlength="50" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Date of Birth <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
                             <input type="date" id="patientDob" required max="<?php echo date('Y-m-d'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Gender <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Gender</label>
                             <select id="patientGender" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                                 <option value="">-- Select --</option>
                                 <option value="MALE">Male</option>
@@ -1648,7 +1648,7 @@ $calendar_appointments = get_all_appointments_for_calendar($conn);
                 </div>
                 <form id="createAppointmentForm" onsubmit="handleCreateAppointment(event)" class="space-y-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Patient <span class="text-red-500">*</span></label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Patient</label>
                         <select id="apptPatientId" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                             <option value="">-- Select patient --</option>
                             <?php foreach ($all_patients as $p): ?>
@@ -1659,7 +1659,7 @@ $calendar_appointments = get_all_appointments_for_calendar($conn);
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Doctor <span class="text-red-500">*</span></label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Doctor</label>
                         <select id="apptDoctorId" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                             <option value="">-- Select doctor --</option>
                             <?php foreach ($active_doctors_list as $doc): ?>
@@ -1672,16 +1672,16 @@ $calendar_appointments = get_all_appointments_for_calendar($conn);
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Date <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Date</label>
                             <input type="date" id="apptDate" required min="<?php echo date('Y-m-d'); ?>" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Time <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Time</label>
                             <input type="time" id="apptTime" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Type <span class="text-red-500">*</span></label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Type</label>
                         <select id="apptType" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                             <option value="CONSULTATION">Consultation</option>
                             <option value="VACCINATION">Vaccination</option>

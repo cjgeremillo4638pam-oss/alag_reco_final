@@ -886,6 +886,18 @@ function handleCancelAppointment($conn, $user_id) {
     $reason = trim($_POST['cancel_reason'] ?? '');
     if (strlen($reason) > 500) $reason = substr($reason, 0, 500);
 
+    $reschedule_date = trim($_POST['cancel_reschedule_date'] ?? '');
+    if ($reschedule_date !== '') {
+        $ts = strtotime($reschedule_date);
+        if (!$ts || $ts < strtotime('today')) {
+            $reschedule_date = '';
+        } else {
+            $reschedule_date = date('Y-m-d', $ts);
+            $reason = trim($reason . "\nPreferred reschedule date: " . $reschedule_date);
+            if (strlen($reason) > 500) $reason = substr($reason, 0, 500);
+        }
+    }
+
     // Verify appointment belongs to parent's child
     $check_query = "SELECT a.id, a.status FROM appointments a
                     JOIN patients p ON a.patient_id = p.id
@@ -917,6 +929,9 @@ function handleCancelAppointment($conn, $user_id) {
         $doctor_id = ($info && ($d = mysqli_fetch_assoc($info))) ? intval($d['doctor_id']) : 0;
         $title = 'Cancellation requested';
         $msg = "A parent requested cancellation of an appointment. Reason: " . ($reason ?: '(no reason given)');
+        if ($reschedule_date !== '') {
+            $msg .= ' Preferred reschedule date: ' . date('M j, Y', strtotime($reschedule_date)) . '.';
+        }
         if ($doctor_id) send_appointment_notification($conn, $doctor_id, $title, $msg, $appointment_id);
         foreach (get_admin_user_ids($conn) as $aid) {
             send_appointment_notification($conn, $aid, $title, $msg, $appointment_id);
@@ -1709,6 +1724,7 @@ function getVaccinationStatusBadge($status) {
                                         <th class="text-left py-2 px-2 md:py-3 md:px-4 font-semibold text-gray-700 text-xs md:text-sm">Doctor</th>
                                         <th class="text-left py-2 px-2 md:py-3 md:px-4 font-semibold text-gray-700 text-xs md:text-sm">Type</th>
                                         <th class="text-left py-2 px-2 md:py-3 md:px-4 font-semibold text-gray-700 text-xs md:text-sm">Status</th>
+                                        <th class="text-left py-2 px-2 md:py-3 md:px-4 font-semibold text-gray-700 text-xs md:text-sm">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -1739,6 +1755,35 @@ function getVaccinationStatusBadge($status) {
                                                 <span class="px-2 py-1 text-xs font-medium rounded-full <?php echo getStatusBadge($appointment['status']); ?>">
                                                     <?php echo htmlspecialchars($appointment['status']); ?>
                                                 </span>
+                                            </td>
+                                            <td class="py-2 px-2 md:py-3 md:px-4">
+                                                <?php if (!empty($appointment['pending_modification_id'])): ?>
+                                                    <span class="text-xs text-amber-700 font-medium">Edit pending</span>
+                                                <?php elseif (in_array($appointment['status'], ['SCHEDULED', 'CONFIRMED'], true)): ?>
+                                                    <div class="flex flex-wrap gap-2">
+                                                        <button type="button"
+                                                                data-appointment='<?php echo htmlspecialchars(json_encode([
+                                                                    "id" => $appointment["id"],
+                                                                    "appointment_date" => $appointment["appointment_date"],
+                                                                    "appointment_time" => $appointment["appointment_time"],
+                                                                    "type" => $appointment["type"],
+                                                                    "reason" => $appointment["reason"],
+                                                                ], JSON_HEX_APOS | JSON_HEX_QUOT), ENT_QUOTES); ?>'
+                                                                onclick="openEditAppointmentModal(this)"
+                                                                class="text-xs text-blue-600 hover:text-blue-800 font-medium">
+                                                            Edit
+                                                        </button>
+                                                        <button type="button"
+                                                                onclick="openCancelAppointmentModal(<?php echo (int) $appointment['id']; ?>)"
+                                                                class="text-xs text-red-600 hover:text-red-800 font-medium">
+                                                            Cancel
+                                                        </button>
+                                                    </div>
+                                                <?php elseif ($appointment['status'] === 'CANCELLATION_REQUESTED'): ?>
+                                                    <span class="text-xs text-amber-700 font-medium">Cancellation pending</span>
+                                                <?php else: ?>
+                                                    <span class="text-xs text-gray-400">—</span>
+                                                <?php endif; ?>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -2014,24 +2059,24 @@ function getVaccinationStatusBadge($status) {
                             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                             <div class="form-grid">
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">First Name <span class="text-red-500">*</span></label>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
                                     <input type="text" name="profile_first_name" value="<?php echo htmlspecialchars($user['first_name'] ?? ''); ?>" required
                                         class="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm md:text-base">
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Last Name <span class="text-red-500">*</span></label>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
                                     <input type="text" name="profile_last_name" value="<?php echo htmlspecialchars($user['last_name'] ?? ''); ?>" required
                                         class="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm md:text-base">
                                 </div>
                             </div>
                             <div class="form-grid">
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Email Address <span class="text-red-500">*</span></label>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
                                     <input type="email" name="profile_email" value="<?php echo htmlspecialchars($user['email'] ?? ''); ?>" required
                                         class="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm md:text-base">
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number <span class="text-red-500">*</span></label>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
                                     <input type="tel" name="profile_phone" required pattern="^9\d{9}$" title="10 digits starting with 9"
                                         value="<?php echo htmlspecialchars($user['phone'] ?? ''); ?>"
                                         class="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm md:text-base">
@@ -2064,13 +2109,13 @@ function getVaccinationStatusBadge($status) {
                                 <h4 class="text-sm font-semibold text-gray-700 mb-3">Emergency Contact</h4>
                                 <div class="form-grid">
                                     <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">Contact Person <span class="text-red-500">*</span></label>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Contact Person</label>
                                         <input type="text" name="profile_emergency_name" required maxlength="100"
                                             value="<?php echo htmlspecialchars($user['emergency_contact_name'] ?? ''); ?>"
                                             class="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm md:text-base">
                                     </div>
                                     <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">Contact Phone <span class="text-red-500">*</span></label>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Contact Phone</label>
                                         <input type="tel" name="profile_emergency_phone" required pattern="^9\d{9}$" title="10 digits starting with 9"
                                             value="<?php echo htmlspecialchars($user['emergency_contact_phone'] ?? ''); ?>"
                                             class="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm md:text-base">
@@ -2102,18 +2147,18 @@ function getVaccinationStatusBadge($status) {
                             <input type="hidden" name="change_password" value="1">
                             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Current Password <span class="text-red-500">*</span></label>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
                                 <input type="password" name="current_password" required
                                     class="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm md:text-base">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">New Password <span class="text-red-500">*</span></label>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">New Password</label>
                                 <input type="password" name="new_password" id="newPassword" required minlength="6"
                                     class="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm md:text-base">
                                 <p class="text-xs text-gray-500 mt-1">Minimum 6 characters with uppercase, lowercase, and a number</p>
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Confirm New Password <span class="text-red-500">*</span></label>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Confirm New Password</label>
                                 <input type="password" name="confirm_password" id="confirmPassword" required minlength="6"
                                     class="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm md:text-base">
                             </div>
@@ -2141,12 +2186,12 @@ function getVaccinationStatusBadge($status) {
 
                     <div class="form-grid">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">First Name <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
                             <input type="text" name="child_first_name" required minlength="1" maxlength="50"
                                 class="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm md:text-base">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Last Name <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
                             <input type="text" name="child_last_name" required minlength="1" maxlength="50"
                                 class="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm md:text-base">
                         </div>
@@ -2154,12 +2199,12 @@ function getVaccinationStatusBadge($status) {
 
                     <div class="form-grid">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Date of Birth <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Date of Birth</label>
                             <input type="date" name="child_dob" required max="<?php echo date('Y-m-d'); ?>"
                                 class="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm md:text-base">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Gender <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Gender</label>
                             <select name="child_gender" required
                                     class="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm md:text-base">
                                 <option value="">Select gender</option>
@@ -2246,12 +2291,12 @@ function getVaccinationStatusBadge($status) {
 
                     <div class="form-grid">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">First Name <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
                             <input type="text" name="child_first_name" id="edit_child_first_name" required minlength="1" maxlength="50"
                                 class="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm md:text-base">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Last Name <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
                             <input type="text" name="child_last_name" id="edit_child_last_name" required minlength="1" maxlength="50"
                                 class="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm md:text-base">
                         </div>
@@ -2259,12 +2304,12 @@ function getVaccinationStatusBadge($status) {
 
                     <div class="form-grid">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Date of Birth <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Date of Birth</label>
                             <input type="date" name="child_dob" id="edit_child_dob" required max="<?php echo date('Y-m-d'); ?>"
                                 class="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm md:text-base">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Gender <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Gender</label>
                             <select name="child_gender" id="edit_child_gender" required
                                     class="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm md:text-base">
                                 <option value="">Select gender</option>
@@ -2348,7 +2393,7 @@ function getVaccinationStatusBadge($status) {
 
                     <div class="form-grid">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Select Child <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Select Child</label>
                             <select name="appointment_child" id="modalAppointmentChild" required 
                                     class="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm md:text-base">
                                 <option value="">-- Select Child --</option>
@@ -2360,7 +2405,7 @@ function getVaccinationStatusBadge($status) {
                             </select>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Select Doctor <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Select Doctor</label>
                             <select name="appointment_doctor" id="modalAppointmentDoctor" required 
                                     class="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm md:text-base">
                                 <option value="">-- Select Doctor --</option>
@@ -2378,13 +2423,13 @@ function getVaccinationStatusBadge($status) {
                     
                     <div class="form-grid">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Appointment Date <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Appointment Date</label>
                             <input type="date" id="modalAppointmentDate" name="appointment_date" required 
                                 min="<?php echo date('Y-m-d'); ?>"
                                 class="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm md:text-base">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Appointment Time <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Appointment Time</label>
                             <select name="appointment_time" id="modalAppointmentTime" required 
                                     class="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm md:text-base">
                                 <option value="">-- Select Time --</option>
@@ -2408,7 +2453,7 @@ function getVaccinationStatusBadge($status) {
                     
                     <div class="form-grid">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Service Type <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Service Type</label>
                             <select name="appointment_service" required 
                                     class="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm md:text-base">
                                 <option value="CONSULTATION">General Consultation</option>
@@ -2460,13 +2505,13 @@ function getVaccinationStatusBadge($status) {
 
                     <div class="form-grid">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Appointment Date <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Appointment Date</label>
                             <input type="date" name="appointment_date" id="edit_appointment_date" required
                                 min="<?php echo date('Y-m-d'); ?>"
                                 class="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm md:text-base">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Appointment Time <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Appointment Time</label>
                             <select name="appointment_time" id="edit_appointment_time" required
                                     class="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm md:text-base">
                                 <option value="">-- Select Time --</option>
@@ -2489,7 +2534,7 @@ function getVaccinationStatusBadge($status) {
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Service Type <span class="text-red-500">*</span></label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Service Type</label>
                         <select name="appointment_service" id="edit_appointment_service" required
                                 class="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm md:text-base">
                             <option value="CONSULTATION">General Consultation</option>
@@ -2533,10 +2578,15 @@ function getVaccinationStatusBadge($status) {
                     <input type="hidden" name="cancel_appointment" value="1">
                     <input type="hidden" name="cancel_appointment_id" id="cancel_appointment_id">
                     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Reason for cancellation <span class="text-red-500">*</span></label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Reason for cancellation</label>
                     <textarea name="cancel_reason" id="cancel_reason" rows="3" required maxlength="500"
                             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm mb-4"
                             placeholder="Please tell us why you need to cancel..."></textarea>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Preferred reschedule date <span class="text-xs text-gray-500 font-normal">(optional)</span></label>
+                    <input type="date" name="cancel_reschedule_date" id="cancel_reschedule_date"
+                            min="<?php echo date('Y-m-d'); ?>"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm mb-4">
+                    <p class="text-xs text-gray-500 mb-4">If you'd like to rebook, share a preferred date so the clinic can offer you a new slot.</p>
                     <div class="flex space-x-3">
                         <button type="submit" class="flex-1 bg-red-600 text-white py-2 rounded-lg font-semibold hover:bg-red-700 text-sm">
                             Submit Request
@@ -2708,13 +2758,13 @@ function getVaccinationStatusBadge($status) {
                     <input type="hidden" name="upload_patient_id" id="upload_patient_id" value="">
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Select file <span class="text-red-500">*</span></label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Select file</label>
                         <input type="file" name="patient_file" required accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" class="w-full">
                         <p class="text-xs text-gray-500 mt-1">Allowed: pdf, jpg, png, docx. Max 5 MB.</p>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">File Category <span class="text-red-500">*</span></label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">File Category</label>
                         <select name="file_category" required class="w-full border rounded p-2 text-sm">
                             <option value="">-- Select category --</option>
                             <option value="LAB_RESULT">Laboratory Results</option>
