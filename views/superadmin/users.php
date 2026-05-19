@@ -169,17 +169,17 @@ $roleBadgeColor = fn(string $r): string => match ($r) {
                     <h6 class="text-muted text-uppercase small mb-2">Identity</h6>
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label class="form-label">First Name <span class="text-danger">*</span></label>
+                            <label class="form-label">First Name</label>
                             <input type="text" name="first_name" id="editFirstName" class="form-control" required maxlength="50">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Last Name <span class="text-danger">*</span></label>
+                            <label class="form-label">Last Name</label>
                             <input type="text" name="last_name" id="editLastName" class="form-control" required maxlength="50">
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label class="form-label">Email <span class="text-danger">*</span></label>
+                            <label class="form-label">Email</label>
                             <input type="email" name="email" id="editEmail" class="form-control" required maxlength="100">
                         </div>
                         <div class="col-md-6">
@@ -222,7 +222,7 @@ $roleBadgeColor = fn(string $r): string => match ($r) {
                     <h6 class="text-muted text-uppercase small mb-2 mt-3">Account</h6>
                     <div class="row mb-1">
                         <div class="col-md-6">
-                            <label class="form-label">Role <span class="text-danger">*</span></label>
+                            <label class="form-label">Role</label>
                             <select name="user_type" id="editUserType" class="form-select" required>
                                 <option value="PARENT">Parent</option>
                                 <option value="ADMIN">Admin</option>
@@ -231,7 +231,7 @@ $roleBadgeColor = fn(string $r): string => match ($r) {
                             <small class="text-muted" id="editRoleHint"></small>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Status <span class="text-danger">*</span></label>
+                            <label class="form-label">Status</label>
                             <select name="status" id="editStatus" class="form-select" required>
                                 <option value="active">Active</option>
                                 <option value="inactive">Inactive</option>

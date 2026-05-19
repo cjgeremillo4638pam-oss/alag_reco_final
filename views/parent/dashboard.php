@@ -82,7 +82,10 @@ use App\Middleware\CsrfMiddleware;
                 <td><span class="badge bg-info"><?= $apt['status'] ?></span></td>
                 <td>
                     <?php if (in_array($apt['status'], ['SCHEDULED', 'CONFIRMED'])): ?>
-                    <button class="btn btn-sm btn-outline-danger" onclick="cancelAppointment(<?= $apt['id'] ?>)" title="Cancel"><i class="bi bi-x"></i></button>
+                    <div class="btn-group btn-group-sm">
+                        <button class="btn btn-outline-primary" onclick="showEditModal(<?= $apt['id'] ?>)" title="Edit"><i class="bi bi-pencil"></i></button>
+                        <button class="btn btn-outline-danger" onclick="cancelAppointment(<?= $apt['id'] ?>)" title="Cancel"><i class="bi bi-x"></i></button>
+                    </div>
                     <?php endif; ?>
                 </td>
             </tr>
@@ -159,6 +162,45 @@ use App\Middleware\CsrfMiddleware;
     </div>
 </div>
 
+<!-- Edit Appointment Modal -->
+<div class="modal fade" id="editApptModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header"><h5 class="modal-title">Edit Appointment</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body">
+                <form id="editApptForm">
+                    <input type="hidden" name="appointment_id" id="editApptId">
+                    <input type="hidden" name="doctor_id" id="editApptDoctorId">
+                    <div class="mb-3"><label class="form-label">Doctor</label>
+                        <input type="text" id="editApptDoctorName" class="form-control" disabled>
+                    </div>
+                    <div class="mb-3"><label class="form-label">Date</label>
+                        <input type="date" name="appointment_date" id="editApptDate" class="form-control" required min="<?= date('Y-m-d') ?>" onchange="loadEditSlots()">
+                    </div>
+                    <div class="mb-3"><label class="form-label">Time Slot</label>
+                        <select name="appointment_time" id="editApptTime" class="form-select" required>
+                            <option value="">Select a date first</option>
+                        </select>
+                    </div>
+                    <div class="mb-3"><label class="form-label">Type</label>
+                        <select name="type" id="editApptType" class="form-select">
+                            <option value="CONSULTATION">Consultation</option>
+                            <option value="VACCINATION">Vaccination</option>
+                            <option value="CHECKUP">Checkup</option>
+                            <option value="FOLLOW_UP">Follow-up</option>
+                        </select>
+                    </div>
+                    <div class="mb-3"><label class="form-label">Reason</label><textarea name="reason" id="editApptReason" class="form-control" rows="2" placeholder="Reason for visit..."></textarea></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" onclick="submitEditAppointment()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Records Modal -->
 <div class="modal fade" id="recordsModal">
     <div class="modal-dialog modal-xl">
@@ -213,6 +255,55 @@ async function loadSlots() {
 
 async function bookAppointment() {
     const result = await apiRequest('/parent/appointments', 'POST', new FormData(document.getElementById('bookForm')));
+    if (result.success) { showToast(result.message, 'success'); setTimeout(() => location.reload(), 800); }
+}
+
+async function showEditModal(id) {
+    const result = await apiRequest(`/parent/appointments/${id}`);
+    if (!result.success) return;
+    const a = result.data;
+
+    document.getElementById('editApptId').value = a.id;
+    document.getElementById('editApptDoctorId').value = a.doctor_id;
+    document.getElementById('editApptDoctorName').value = 'Dr. ' + (a.doctor_first_name || '') + ' ' + (a.doctor_last_name || '');
+    document.getElementById('editApptDate').value = a.appointment_date;
+    document.getElementById('editApptType').value = a.type || 'CONSULTATION';
+    document.getElementById('editApptReason').value = a.reason || '';
+
+    // Pre-load slots for the current date and select the existing time.
+    await loadEditSlots(a.appointment_time);
+
+    new bootstrap.Modal(document.getElementById('editApptModal')).show();
+}
+
+async function loadEditSlots(preselectTime) {
+    const doctorId = document.getElementById('editApptDoctorId').value;
+    const date = document.getElementById('editApptDate').value;
+    const select = document.getElementById('editApptTime');
+    if (!doctorId || !date) { select.innerHTML = '<option value="">Select a date first</option>'; return; }
+
+    select.innerHTML = '<option value="">Loading slots...</option>';
+    try {
+        const result = await fetch(`available-slots.php?doctor_id=${doctorId}&date=${date}`).then(r => r.json());
+        select.innerHTML = '<option value="">Select time...</option>';
+        if (result.success) {
+            result.data.filter(s => s.available || (preselectTime && s.time === preselectTime)).forEach(s => {
+                const opt = document.createElement('option');
+                opt.value = s.time;
+                opt.textContent = s.formatted;
+                if (preselectTime && s.time === preselectTime) opt.selected = true;
+                select.appendChild(opt);
+            });
+            if (select.options.length === 1) select.innerHTML = '<option value="">No available slots</option>';
+        }
+    } catch (e) {
+        select.innerHTML = '<option value="">Failed to load slots</option>';
+    }
+}
+
+async function submitEditAppointment() {
+    const id = document.getElementById('editApptId').value;
+    const result = await apiRequest(`/parent/appointments/${id}/edit`, 'POST', new FormData(document.getElementById('editApptForm')));
     if (result.success) { showToast(result.message, 'success'); setTimeout(() => location.reload(), 800); }
 }
 
@@ -271,11 +362,11 @@ async function viewRecords(patientId) {
                     <input type="hidden" name="patient_id" value="${patientId}">
                     <div class="row g-2 align-items-end">
                         <div class="col-md-5">
-                            <label class="form-label small mb-1">File <span class="text-danger">*</span></label>
+                            <label class="form-label small mb-1">File</label>
                             <input type="file" name="file" class="form-control form-control-sm" accept=".pdf,.jpg,.jpeg,.png,.gif,.doc,.docx" required>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label small mb-1">Category <span class="text-danger">*</span></label>
+                            <label class="form-label small mb-1">Category</label>
                             <select name="file_category" class="form-select form-select-sm" required>
                                 <option value="LAB_RESULT">Lab Result</option>
                                 <option value="MRI">MRI</option>

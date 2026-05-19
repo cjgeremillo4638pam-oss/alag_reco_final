@@ -123,7 +123,7 @@ $sidebarNav = '
                         <div id="patientResults" class="list-group mt-1" style="max-height:180px;overflow-y:auto;display:none;"></div>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Doctor <span class="text-danger">*</span></label>
+                        <label class="form-label">Doctor</label>
                         <select name="doctor_id" id="bookDoctor" class="form-select" required onchange="loadBookSlots()">
                             <option value="">Select doctor...</option>
                             <?php foreach ($doctors as $d): ?>
@@ -132,11 +132,11 @@ $sidebarNav = '
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Date <span class="text-danger">*</span></label>
+                        <label class="form-label">Date</label>
                         <input type="date" name="appointment_date" id="bookDate" class="form-control" min="<?= date('Y-m-d') ?>" required onchange="loadBookSlots()">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Time slot <span class="text-danger">*</span></label>
+                        <label class="form-label">Time slot</label>
                         <select name="appointment_time" id="bookTime" class="form-select" required>
                             <option value="">Select doctor and date first</option>
                         </select>

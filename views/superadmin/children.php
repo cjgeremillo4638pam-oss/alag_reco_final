@@ -93,12 +93,12 @@ $sidebarNav = '
                         <div id="parentResults" class="list-group mt-1" style="max-height:180px;overflow-y:auto;display:none;"></div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-6"><label class="form-label">First Name <span class="text-danger">*</span></label><input type="text" name="first_name" class="form-control" required></div>
-                        <div class="col-6"><label class="form-label">Last Name <span class="text-danger">*</span></label><input type="text" name="last_name" class="form-control" required></div>
+                        <div class="col-6"><label class="form-label">First Name</label><input type="text" name="first_name" class="form-control" required></div>
+                        <div class="col-6"><label class="form-label">Last Name</label><input type="text" name="last_name" class="form-control" required></div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-6"><label class="form-label">Date of Birth <span class="text-danger">*</span></label><input type="date" name="date_of_birth" class="form-control" required></div>
-                        <div class="col-6"><label class="form-label">Gender <span class="text-danger">*</span></label>
+                        <div class="col-6"><label class="form-label">Date of Birth</label><input type="date" name="date_of_birth" class="form-control" required></div>
+                        <div class="col-6"><label class="form-label">Gender</label>
                             <select name="gender" class="form-select" required>
                                 <option value="MALE">Male</option>
                                 <option value="FEMALE">Female</option>
