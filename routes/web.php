@@ -105,6 +105,8 @@ $router->group(['middleware' => [AuthMiddleware::class]], function ($router) {
         $router->post('/parent/children/{id}/update', [ParentController::class, 'updateChild']);
         $router->post('/parent/appointments', [ParentController::class, 'bookAppointment']);
         $router->post('/parent/appointments/{id}/cancel', [ParentController::class, 'cancelAppointment']);
+        $router->get('/parent/appointments/{id}', [ParentController::class, 'getAppointment']);
+        $router->post('/parent/appointments/{id}/edit', [ParentController::class, 'editAppointment']);
         $router->get('/parent/appointments', [ParentController::class, 'myAppointments']);
         $router->get('/parent/available-slots', [ParentController::class, 'getAvailableSlots']);
         $router->get('/parent/doctors', [ParentController::class, 'getDoctors']);

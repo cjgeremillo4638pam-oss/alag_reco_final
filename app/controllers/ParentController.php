@@ -172,6 +172,64 @@ class ParentController extends Controller
     }
 
     /**
+     * Fetch an appointment owned by the current parent (used to pre-fill the edit modal).
+     */
+    public function getAppointment(string $id): void
+    {
+        $appointment = $this->appointmentService->getDetails((int) $id);
+        if (!$appointment) {
+            Response::error('Appointment not found.', 404);
+            return;
+        }
+
+        $patientModel = new Patient();
+        if (!$patientModel->belongsToParent((int) $appointment['patient_id'], $this->userId())) {
+            Response::error('Access denied.', 403);
+            return;
+        }
+
+        Response::success($appointment);
+    }
+
+    /**
+     * Edit (reschedule) an existing appointment that belongs to this parent's child.
+     */
+    public function editAppointment(string $id): void
+    {
+        $appointmentId = (int) $id;
+        $appointment = $this->appointmentService->getDetails($appointmentId);
+        if (!$appointment) {
+            Response::error('Appointment not found.', 404);
+            return;
+        }
+
+        $patientModel = new Patient();
+        if (!$patientModel->belongsToParent((int) $appointment['patient_id'], $this->userId())) {
+            Response::error('Access denied.', 403);
+            return;
+        }
+
+        $validation = $this->validate([
+            'appointment_date' => 'required|date',
+            'appointment_time' => 'required',
+        ]);
+
+        if (!empty($validation['errors'])) {
+            Response::validationError($validation['errors']);
+            return;
+        }
+
+        $data = array_merge($validation['data'], [
+            'type' => $this->input('type', $appointment['type']),
+            'reason' => $this->input('reason', $appointment['reason']),
+            'duration' => (int) $this->input('duration', (string) ($appointment['duration'] ?? 30)),
+        ]);
+
+        $result = $this->appointmentService->editAppointment($appointmentId, $data, $this->userId());
+        $result['success'] ? Response::success(null, $result['message']) : Response::error($result['message']);
+    }
+
+    /**
      * Get available time slots.
      */
     public function getAvailableSlots(): void

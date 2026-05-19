@@ -145,6 +145,71 @@ class AppointmentService
     }
 
     /**
+     * Reschedule / edit an existing appointment.
+     *
+     * Only SCHEDULED or CONFIRMED appointments that have not yet occurred can be edited.
+     * Allowed fields: appointment_date, appointment_time, type, reason, duration.
+     */
+    public function editAppointment(int $appointmentId, array $data, int $userId): array
+    {
+        $appointment = $this->appointmentModel->find($appointmentId);
+        if (!$appointment) {
+            return ['success' => false, 'message' => 'Appointment not found.'];
+        }
+
+        if (!in_array($appointment['status'], ['SCHEDULED', 'CONFIRMED'], true)) {
+            return ['success' => false, 'message' => 'Only upcoming appointments can be edited.'];
+        }
+
+        $newDate = $data['appointment_date'] ?? $appointment['appointment_date'];
+        $newTime = $data['appointment_time'] ?? $appointment['appointment_time'];
+
+        if (strtotime($newDate) < strtotime('today')) {
+            return ['success' => false, 'message' => 'Cannot reschedule to a date in the past.'];
+        }
+
+        $duration = (int) ($data['duration'] ?? $appointment['duration'] ?? 30);
+        $endTime = date('H:i:s', strtotime($newTime) + ($duration * 60));
+
+        $this->db->beginTransaction();
+        try {
+            if ($this->appointmentModel->hasOverlap(
+                (int) $appointment['doctor_id'],
+                $newDate,
+                $newTime,
+                $endTime,
+                $appointmentId
+            )) {
+                $this->db->rollback();
+                return ['success' => false, 'message' => 'This time slot is no longer available. Please choose another.'];
+            }
+
+            $updateData = [
+                'appointment_date' => $newDate,
+                'appointment_time' => $newTime,
+                'end_time' => $endTime,
+                'duration' => $duration,
+                'type' => $data['type'] ?? $appointment['type'],
+                'reason' => $data['reason'] ?? $appointment['reason'],
+                'status' => 'SCHEDULED',
+            ];
+
+            $this->appointmentModel->updateById($appointmentId, $updateData);
+            $this->db->commit();
+
+            $this->sendAppointmentNotifications($appointmentId, 'rescheduled');
+
+            $this->activityLog->log('APPOINTMENT_RESCHEDULED', $userId, 'appointment', $appointmentId,
+                "Rescheduled from {$appointment['appointment_date']} {$appointment['appointment_time']} to {$newDate} {$newTime}");
+
+            return ['success' => true, 'message' => 'Appointment updated successfully.'];
+        } catch (\Throwable $e) {
+            $this->db->rollback();
+            throw $e;
+        }
+    }
+
+    /**
      * Get available time slots for a doctor on a given date.
      */
     public function getAvailableSlots(int $doctorId, string $date): array
