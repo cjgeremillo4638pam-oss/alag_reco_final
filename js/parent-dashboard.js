@@ -462,6 +462,8 @@ function openCancelAppointmentModal(appointmentId) {
     if (idInput) idInput.value = appointmentId;
     var reason = document.getElementById('cancel_reason');
     if (reason) reason.value = '';
+    var rd = document.getElementById('cancel_reschedule_date');
+    if (rd) rd.value = '';
     el.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
 }

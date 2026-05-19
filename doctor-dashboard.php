@@ -2507,6 +2507,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     <!-- Main Content -->
     <div class="flex-1 main-content overflow-auto">
+        <!-- Top bar: notification bell -->
+        <div class="flex items-center justify-end gap-2 px-4 md:px-6 lg:px-8 pt-4">
+            <div id="notificationBellMount"></div>
+        </div>
         <!-- Dashboard Section -->
         <div id="dashboard-section" class="section-content p-6 fade-in">
             <div class="mb-8">
@@ -3211,13 +3215,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">First Name <span class="text-red-500">*</span></label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
                                 <input type="text" name="first_name" required minlength="2" maxlength="50"
                                        value="<?php echo htmlspecialchars($current_user['first_name']); ?>"
                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Last Name <span class="text-red-500">*</span></label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
                                 <input type="text" name="last_name" required minlength="2" maxlength="50"
                                        value="<?php echo htmlspecialchars($current_user['last_name']); ?>"
                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
@@ -3225,14 +3229,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Email <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
                             <input type="email" name="email" required maxlength="100"
                                    value="<?php echo htmlspecialchars($current_user['email']); ?>"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Phone <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Phone</label>
                             <div class="flex">
                                 <span class="px-3 py-2 border border-gray-300 bg-gray-50 rounded-l-lg text-gray-700">+63</span>
                                 <input type="tel" name="phone" required pattern="^9\d{9}$" maxlength="10"
@@ -3253,13 +3257,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Specialization <span class="text-red-500">*</span></label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Specialization</label>
                                 <input type="text" name="specialization" required minlength="2" maxlength="100"
                                        value="<?php echo htmlspecialchars($current_user['specialization']); ?>"
                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">License Number <span class="text-red-500">*</span></label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">License Number</label>
                                 <input type="text" name="license_number" required minlength="3" maxlength="50"
                                        value="<?php echo htmlspecialchars($current_user['license_number']); ?>"
                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
@@ -3287,12 +3291,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <input type="hidden" name="action" value="change_doctor_password">
 
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Current Password <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
                             <input type="password" name="current_password" required minlength="6" autocomplete="current-password"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">New Password <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">New Password</label>
                             <input type="password" name="new_password" required minlength="8" autocomplete="new-password"
                                    pattern="^(?=.*[A-Za-z])(?=.*\d).{8,}$"
                                    title="At least 8 characters with letters and numbers"
@@ -3300,7 +3304,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <p class="text-xs text-gray-500 mt-1">Minimum 8 characters, must include letters and numbers.</p>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Confirm New Password <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
                             <input type="password" name="confirm_password" required minlength="8" autocomplete="new-password"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
@@ -3388,8 +3392,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                                 <div>
                                     <label for="vaccine_name_input" class="block text-sm font-medium text-gray-700 mb-2">
-                                        Vaccine Name <span class="text-red-500">*</span>
-                                    </label>
+                                        Vaccine Name                                    </label>
                                     <select id="vaccine_name_input" name="vaccine_name" required 
                                             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                                         <option value="">-- Select Vaccine --</option>
@@ -3518,12 +3521,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         
                         <div class="grid grid-cols-2 gap-4 mb-4">
                             <div>
-                                <label for="lot_number" class="block text-sm font-medium text-gray-700 mb-2">Lot Number <span class="text-red-500">*</span></label>
+                                <label for="lot_number" class="block text-sm font-medium text-gray-700 mb-2">Lot Number</label>
                                 <input type="text" id="lot_number" name="lot_number" required
                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                             </div>
                             <div>
-                                <label for="manufacturer" class="block text-sm font-medium text-gray-700 mb-2">Manufacturer <span class="text-red-500">*</span></label>
+                                <label for="manufacturer" class="block text-sm font-medium text-gray-700 mb-2">Manufacturer</label>
                                 <input type="text" id="manufacturer" name="manufacturer" required
                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                             </div>
@@ -3531,7 +3534,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                         <div class="grid grid-cols-2 gap-4 mb-4">
                             <div>
-                                <label for="site" class="block text-sm font-medium text-gray-700 mb-2">Site <span class="text-red-500">*</span></label>
+                                <label for="site" class="block text-sm font-medium text-gray-700 mb-2">Site</label>
                                 <select id="site" name="site" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                                     <option value="">-- Select --</option>
                                     <option value="Left Arm">Left Arm</option>
@@ -3542,7 +3545,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </select>
                             </div>
                             <div>
-                                <label for="next_due_date" class="block text-sm font-medium text-gray-700 mb-2">Next Dose Due <span class="text-red-500">*</span></label>
+                                <label for="next_due_date" class="block text-sm font-medium text-gray-700 mb-2">Next Dose Due</label>
                                 <input type="date" id="next_due_date" name="next_due_date" required
                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                             </div>
@@ -3670,7 +3673,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                         
                         <div class="mb-4">
-                            <label for="record_type" class="block text-sm font-medium text-gray-700 mb-2">Record Type <span class="text-red-500">*</span></label>
+                            <label for="record_type" class="block text-sm font-medium text-gray-700 mb-2">Record Type</label>
                             <select id="record_type" name="record_type" required
                                     class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                                 <option value="">Select type</option>
@@ -3684,13 +3687,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                         <div class="grid grid-cols-2 gap-4 mb-4">
                             <div>
-                                <label for="temperature" class="block text-sm font-medium text-gray-700 mb-2">Temperature (°C) <span class="text-red-500">*</span></label>
+                                <label for="temperature" class="block text-sm font-medium text-gray-700 mb-2">Temperature (°C)</label>
                                 <input type="number" step="0.1" min="25" max="45" id="temperature" name="temperature" required
                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                                        placeholder="e.g., 37.0">
                             </div>
                             <div>
-                                <label for="blood_pressure" class="block text-sm font-medium text-gray-700 mb-2">Blood Pressure <span class="text-red-500">*</span></label>
+                                <label for="blood_pressure" class="block text-sm font-medium text-gray-700 mb-2">Blood Pressure</label>
                                 <input type="text" id="blood_pressure" name="blood_pressure" required
                                        pattern="^\d{1,3}\s*/\s*\d{1,3}$"
                                        maxlength="10"
@@ -3702,13 +3705,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                         <div class="grid grid-cols-2 gap-4 mb-4">
                             <div>
-                                <label for="heart_rate" class="block text-sm font-medium text-gray-700 mb-2">Heart Rate (BPM) <span class="text-red-500">*</span></label>
+                                <label for="heart_rate" class="block text-sm font-medium text-gray-700 mb-2">Heart Rate (BPM)</label>
                                 <input type="number" min="20" max="300" id="heart_rate" name="heart_rate" required
                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                                        placeholder="e.g., 80">
                             </div>
                             <div>
-                                <label for="height" class="block text-sm font-medium text-gray-700 mb-2">Height (cm) <span class="text-red-500">*</span></label>
+                                <label for="height" class="block text-sm font-medium text-gray-700 mb-2">Height (cm)</label>
                                 <input type="number" step="0.1" min="0" max="250" id="height" name="height" required
                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                                        placeholder="e.g., 120">
@@ -3716,28 +3719,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
 
                         <div class="mb-4">
-                            <label for="weight" class="block text-sm font-medium text-gray-700 mb-2">Weight (kg) <span class="text-red-500">*</span></label>
+                            <label for="weight" class="block text-sm font-medium text-gray-700 mb-2">Weight (kg)</label>
                             <input type="number" step="0.1" min="0" max="300" id="weight" name="weight" required
                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                                    placeholder="e.g., 25.0">
                         </div>
                         
                         <div class="mb-4">
-                            <label for="diagnosis" class="block text-sm font-medium text-gray-700 mb-2">Diagnosis <span class="text-red-500">*</span></label>
+                            <label for="diagnosis" class="block text-sm font-medium text-gray-700 mb-2">Diagnosis</label>
                             <input type="text" id="diagnosis" name="diagnosis" required
                                    minlength="2" maxlength="255"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                         </div>
 
                         <div class="mb-4">
-                            <label for="symptoms" class="block text-sm font-medium text-gray-700 mb-2">Symptoms <span class="text-red-500">*</span></label>
+                            <label for="symptoms" class="block text-sm font-medium text-gray-700 mb-2">Symptoms</label>
                             <textarea id="symptoms" name="symptoms" rows="3" required
                                       minlength="2" maxlength="2000"
                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"></textarea>
                         </div>
 
                         <div class="mb-4">
-                            <label for="treatment_plan" class="block text-sm font-medium text-gray-700 mb-2">Treatment Plan <span class="text-red-500">*</span></label>
+                            <label for="treatment_plan" class="block text-sm font-medium text-gray-700 mb-2">Treatment Plan</label>
                             <textarea id="treatment_plan" name="treatment_plan" rows="3" required
                                       minlength="2" maxlength="2000"
                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"></textarea>
@@ -3792,7 +3795,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                         
                         <div class="mb-4">
-                            <label for="consultation_diagnosis" class="block text-sm font-medium text-gray-700 mb-2">Diagnosis <span class="text-red-500">*</span></label>
+                            <label for="consultation_diagnosis" class="block text-sm font-medium text-gray-700 mb-2">Diagnosis</label>
                             <input type="text" id="consultation_diagnosis" name="diagnosis" required
                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                                    placeholder="Enter diagnosis...">
@@ -3806,7 +3809,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                         
                         <div class="mb-6">
-                            <label for="treatment_plan_consultation" class="block text-sm font-medium text-gray-700 mb-2">Treatment Plan <span class="text-red-500">*</span></label>
+                            <label for="treatment_plan_consultation" class="block text-sm font-medium text-gray-700 mb-2">Treatment Plan</label>
                             <textarea id="treatment_plan_consultation" name="treatment_plan" rows="3" required
                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                                       placeholder="Enter treatment plan..."></textarea>
@@ -3863,7 +3866,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         
                         <div class="grid grid-cols-3 gap-4 mb-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Dosage <span class="text-red-500">*</span></label>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Dosage</label>
                                 <div class="flex gap-2">
                                     <input type="number" step="0.01" min="0" id="dosage_amount" name="dosage_amount" required
                                            class="w-2/3 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
@@ -3884,7 +3887,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <input type="hidden" id="dosage" name="dosage">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Frequency <span class="text-red-500">*</span></label>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Frequency</label>
                                 <select id="frequency_unit" name="frequency_unit" required
                                         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                                     <option value="">-- Select frequency --</option>
@@ -3904,7 +3907,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <input type="hidden" id="frequency" name="frequency">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Duration <span class="text-red-500">*</span></label>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Duration</label>
                                 <div class="flex gap-2">
                                     <input type="number" min="1" id="duration_amount" name="duration_amount" required
                                            class="w-2/3 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
@@ -3956,7 +3959,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </script>
                         
                         <div class="mb-6">
-                            <label for="instructions" class="block text-sm font-medium text-gray-700 mb-2">Instructions <span class="text-red-500">*</span></label>
+                            <label for="instructions" class="block text-sm font-medium text-gray-700 mb-2">Instructions</label>
                             <textarea id="instructions" name="instructions" rows="3" required
                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                                       placeholder="Enter special instructions..."></textarea>
@@ -4008,6 +4011,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </script>
     <script src="js/shared-toast.js?v=<?php echo @filemtime(__DIR__ . '/js/shared-toast.js') ?: time(); ?>"></script>
     <script src="js/doctor-dashboard.js?v=<?php echo @filemtime(__DIR__ . '/js/doctor-dashboard.js') ?: time(); ?>"></script>
+    <script src="js/notification-bell.js?v=<?php echo @filemtime(__DIR__ . '/js/notification-bell.js') ?: time(); ?>"></script>
     <script>
     // ── Weekly Schedule UI ────────────────────────────────────────────────────
     const DAY_ORDER = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'];
